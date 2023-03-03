@@ -6,10 +6,18 @@
 }
 
 .card-actions {
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
 }
 
 .card-button {
+    width: 100%;
+    box-sizing: border-box;
+    margin:10px;
     text-transform: none;
     font-weight: 600;
 }
+
+/* .button{
+    padding:0px;
+    width: 600px;
+} */

@@ -31,6 +31,36 @@ p {
     color: #3C3C3C;
 }
 
+.AdressButton{
+    display:"flex";
+    justify-content: "space-between";
+    box-shadow: 'none';
+    text-transform: 'none';
+    font-size: 16;
+    font-weight: bold;
+    padding: '6px 12px';
+    border: "0.5px solid #00a278";
+    border-color: '#0063cc';
+
+  }
+
+  .AdressButton:hover{
+    border-color: '#0062cc';
+    box-shadow: 'none';
+  }
+
+  .AdressButton:active{
+    box-sizing: 10px;
+    border-color: '#005cbf';
+  }
+
+  .AdressButton:focus{
+    border: "2px solid #00a278",
+  }
+
+.color{
+
+}
 @media screen and (min-width: 768px) {
     .shipping-container {
         padding: 2rem 4rem;

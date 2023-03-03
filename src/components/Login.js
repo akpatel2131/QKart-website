@@ -10,8 +10,12 @@ import Header from "./Header";
 import "./Login.css";
 
 const Login = () => {
+  const hist = useHistory();
   const { enqueueSnackbar } = useSnackbar();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
+  // TODO: CRIO_TASK_MODULE_LOGIN - Fetch the API response
   /**
    * Perform the Login API call
    * @param {{ username: string, password: string }} formData
@@ -37,8 +41,27 @@ const Login = () => {
    *
    */
   const login = async (formData) => {
+    if (!validateInput()) {
+      return;
+    }
+    try {
+      const resp = await axios.post(`${config.endpoint}/auth/login`, { username, password });
+      persistLogin(resp.data)
+      enqueueSnackbar("Logged in successfully", { variant: 'success' });
+      // hist.push("/");
+      hist.push({
+        pathname : "/",
+      })
+    } catch (error) {
+      if (error.response && error.response.status === 400) {
+        enqueueSnackbar("Password is incorrect", { variant: 'error' });
+      } else {
+        enqueueSnackbar("Something went wrong!", { variant: 'error' });
+      }
+    }
   };
 
+  // TODO: CRIO_TASK_MODULE_LOGIN - Validate the input
   /**
    * Validate the input values so that any bad or illegal values are not passed to the backend.
    *
@@ -53,9 +76,27 @@ const Login = () => {
    * -    Check that username field is not an empty value - "Username is a required field"
    * -    Check that password field is not an empty value - "Password is a required field"
    */
-  const validateInput = (data) => {
+  const validateInput = () => {
+    if (username) {
+      if (password) {
+        if (username.length >= 6) {
+          if (password.length >= 6) {
+            return true;
+          }
+          enqueueSnackbar("Password must be atleast 6 characters!", { variant: 'warning' })
+          return false;
+        }
+        enqueueSnackbar("Username must be atleast 6 characters!", { variant: 'warning' })
+        return false;
+      }
+      enqueueSnackbar("Password is required!", { variant: 'warning' })
+      return false;
+    }
+    enqueueSnackbar("Username is required!", { variant: 'warning' })
+    return false;
   };
 
+  // TODO: CRIO_TASK_MODULE_LOGIN - Persist user's login information
   /**
    * Store the login information so that it can be used to identify the user in subsequent API calls
    *
@@ -71,7 +112,10 @@ const Login = () => {
    * -    `username` field in localStorage can be used to store the username that the user is logged in as
    * -    `balance` field in localStorage can be used to store the balance amount in the user's wallet
    */
-  const persistLogin = (token, username, balance) => {
+  const persistLogin = (resp) => {
+    window.localStorage.setItem('token', resp.token);
+    window.localStorage.setItem('username', resp.username);
+    window.localStorage.setItem('balance', resp.balance);
   };
 
   return (
@@ -84,6 +128,34 @@ const Login = () => {
       <Header hasHiddenAuthButtons />
       <Box className="content">
         <Stack spacing={2} className="form">
+          <h2 className="title">Login</h2>
+          <TextField
+            id="username"
+            label="username"
+            variant="outlined"
+            title="Username"
+            name="username"
+            placeholder="Enter Username"
+            fullWidth
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <TextField
+            id="password"
+            variant="outlined"
+            label="password"
+            name="password"
+            type="password"
+            fullWidth
+            placeholder="Enter Password"
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <Button className="button" variant="contained" onClick={login}>
+            LOGIN TO QKART
+          </Button>
+          <p className="secondary-action">
+            Don't have an account?{" "}
+            <Link to="/register" className="link">Register now</Link>
+          </p>
         </Stack>
       </Box>
       <Footer />

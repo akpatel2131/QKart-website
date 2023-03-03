@@ -20,6 +20,11 @@
     color: #00a278 !important;
 }
 
+.Avatar{
+    position:relative;
+    right: 10px;
+}
+
 @media screen and (min-width: 768px) {
     .username-text {
         display: block;
